@@ -1,0 +1,104 @@
+<!DOCTYPE html>
+<html>
+<head>
+
+<title>Checkout</title>
+
+<link rel="stylesheet" href="style.css">
+
+</head>
+
+<body onload="checkAuth(); loadProductsForCheckout()">
+
+<nav>
+
+<b style="color:white;margin-right:20px">
+Checkout System
+</b>
+
+<button onclick="goProducts()">Products</button>
+<button onclick="goCheckout()">Checkout</button>
+<button onclick="goReports()">Reports</button>
+<button onclick="logout()">Logout</button>
+
+</nav>
+
+
+<div class="container">
+
+<h2>Checkout</h2>
+
+
+<div style="display:flex; gap:40px;">
+
+
+<!-- PRODUCTS -->
+
+<div>
+
+<h3>Products</h3>
+
+<table>
+    <thead>
+        <tr>
+            <th>Name</th>
+            <th>Price</th>
+            <th>Stock</th>
+            <th>Add</th>
+        </tr>
+    </thead>
+
+    <tbody id="productsTable"></tbody>
+</table>
+
+</div>
+
+
+
+<!-- CART -->
+
+<div>
+
+<h3>Cart</h3>
+
+<table>
+
+<thead>
+<tr>
+<th>Name</th>
+<th>Qty</th>
+<th>Remove</th>
+</tr>
+</thead>
+
+<tbody id="cartTable"></tbody>
+
+</table>
+
+<br>
+
+<h3 id="total">Total: 0</h3>
+
+<button onclick="checkout()">
+Checkout
+</button>
+
+<button onclick="clearCart()">
+Clear Cart
+</button>
+
+<p id="msg"></p>
+
+</div>
+
+
+</div>
+
+
+</div>
+
+
+<script src="script.js"></script>
+
+</body>
+</html>

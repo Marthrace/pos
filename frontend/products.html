@@ -1,0 +1,65 @@
+<!DOCTYPE html>
+<html>
+<head>
+
+<title>Products</title>
+
+<link rel="stylesheet" href="style.css">
+
+</head>
+
+<body onload="checkAuth(); loadProducts()">
+
+<nav>
+
+<b style="color:white;margin-right:20px">
+Checkout System
+</b>
+
+<button onclick="goProducts()">Products</button>
+<button onclick="goCheckout()">Checkout</button>
+<button onclick="goReports()">Reports</button>
+<button onclick="logout()">Logout</button>
+
+</nav>
+
+<div class="container">
+
+<h2>Products</h2>
+
+<button onclick="loadProducts()">
+Refresh
+</button>
+
+<button id="addBtn"
+onclick="window.location='add-product.html'">
+Add Product
+</button>
+
+<br><br>
+
+<table>
+
+<thead>
+<tr>
+<th>ID</th>
+<th>Name</th>
+<th>Price</th>
+<th>Quantity</th>
+</tr>
+</thead>
+
+<tbody id="productsTable"></tbody>
+
+</table>
+
+</div>
+
+<script src="script.js"></script>
+<script src="script.js"></script>
+
+<script>
+loadProducts();
+</script>
+</body>
+</html>

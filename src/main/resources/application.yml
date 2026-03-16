@@ -1,0 +1,19 @@
+spring:
+  application:
+    name: checkout_system
+
+  datasource:
+    url: jdbc:mysql://localhost:3306/checkout_system
+    username: root
+    password: Akata@123
+
+  jpa:
+    hibernate:
+      ddl-auto: update
+    show-sql: true
+    properties:
+      hibernate:
+        format_sql: true
+
+server:
+  port: 8080
