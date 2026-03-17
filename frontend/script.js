@@ -361,42 +361,38 @@ function clearCart() {
 // Signup function for creating new users
 function signup() {
 
-    const username =
-        document.getElementById("username").value;
-
-    const password =
-        document.getElementById("password").value;
-
-    const role =
-        document.getElementById("role").value;
+    const username = document.getElementById("username").value;
+    const password = document.getElementById("password").value;
+    const role = document.getElementById("role").value;
 
     fetch("http://localhost:8080/users/create", {
         method: "POST",
         headers: {
-            "Content-Type": "application/json"
+            "Content-Type": "application/x-www-form-urlencoded"
         },
-        body: JSON.stringify({
-            username: username,
-            password: password,
-            role: role
-        })
+        body:
+            "username=" + encodeURIComponent(username) +
+            "&password=" + encodeURIComponent(password) +
+            "&role=" + encodeURIComponent(role)
     })
     .then(res => {
 
-        if (res.ok) {
-
-            document.getElementById("msg").innerText =
-                "User created";
-
-        } else {
-
-            document.getElementById("msg").innerText =
-                "Error";
-
+        if (!res.ok) {
+            throw new Error("Request failed");
         }
 
+        return res.text();
+    })
+    .then(data => {
+        document.getElementById("msg").innerText =
+            "User created successfully";
+            window.location.href = "login.html"; 
+    })
+    .catch(err => {
+        console.error(err);
+        document.getElementById("msg").innerText =
+            "Error creating user";
     });
-
 }
 
 //checkauthentication function to protect pages

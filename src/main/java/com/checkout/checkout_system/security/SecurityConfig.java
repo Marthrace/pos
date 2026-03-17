@@ -29,7 +29,7 @@ public SecurityFilterChain filterChain(HttpSecurity http)
                     .requestMatchers("/users/create").permitAll()
 
                     .requestMatchers("/products/**")
-                    .hasAnyRole("ADMIN", "MANAGER")
+                    .hasAnyRole("ADMIN", "MANAGER", "CASHIER")
 
                     .requestMatchers("/checkout/**")
                     .hasRole("CASHIER")

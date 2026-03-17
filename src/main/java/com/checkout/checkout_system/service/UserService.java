@@ -1,7 +1,8 @@
 package com.checkout.checkout_system.service;
 
-import org.springframework.stereotype.Service;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
+import org.springframework.stereotype.Service;
+
 import com.checkout.checkout_system.model.Role;
 import com.checkout.checkout_system.model.User;
 import com.checkout.checkout_system.repository.RoleRepository;
@@ -35,4 +36,7 @@ public UserService(UserRepository userRepository,
         role);
         return userRepository.save(user);
     }
-}
+
+    }
+
+    

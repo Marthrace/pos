@@ -1,6 +1,7 @@
 package com.checkout.checkout_system.service;
 
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import com.checkout.checkout_system.dto.CheckoutItem;
 import com.checkout.checkout_system.dto.CheckoutRequest;
@@ -10,7 +11,6 @@ import com.checkout.checkout_system.model.Product;
 import com.checkout.checkout_system.repository.OrderItemRepository;
 import com.checkout.checkout_system.repository.OrderRepository;
 import com.checkout.checkout_system.repository.ProductRepository;
-import org.springframework.transaction.annotation.Transactional;
 
 @Service
 public class CheckoutService {
