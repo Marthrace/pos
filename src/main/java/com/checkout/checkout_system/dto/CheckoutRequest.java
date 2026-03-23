@@ -6,6 +6,11 @@ public class CheckoutRequest {
 
     private List<CheckoutItem> items;
 
+    // ✅ NEW
+    private String paymentMethod;
+
+    private double paidAmount;
+
     public CheckoutRequest() {
     }
 
@@ -15,5 +20,23 @@ public class CheckoutRequest {
 
     public void setItems(List<CheckoutItem> items) {
         this.items = items;
+    }
+
+    // ✅ getters setters
+
+    public String getPaymentMethod() {
+        return paymentMethod;
+    }
+
+    public void setPaymentMethod(String paymentMethod) {
+        this.paymentMethod = paymentMethod;
+    }
+
+    public double getPaidAmount() {
+        return paidAmount;
+    }
+
+    public void setPaidAmount(double paidAmount) {
+        this.paidAmount = paidAmount;
     }
 }

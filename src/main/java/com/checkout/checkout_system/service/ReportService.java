@@ -17,18 +17,22 @@ public class ReportService {
 
     public Map<String, Object> getSummary() {
 
-        Double totalSales =
-                orderRepository.getTotalSales();
+    Double totalSales =
+            orderRepository.getTotalSales();
 
-        Long totalOrders =
-                orderRepository.getTotalOrders();
+    Long totalOrders =
+            orderRepository.getTotalOrders();
 
-        Map<String, Object> map =
-                new HashMap<>();
+    Double todaySales =
+            orderRepository.getTodaySales();
 
-        map.put("totalSales", totalSales);
-        map.put("totalOrders", totalOrders);
+    Map<String, Object> map =
+            new HashMap<>();
 
-        return map;
-    }
+    map.put("totalSales", totalSales);
+    map.put("totalOrders", totalOrders);
+    map.put("todaySales", todaySales);
+
+    return map;
+}
 }

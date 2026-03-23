@@ -23,20 +23,28 @@ Checkout System
 
 </nav>
 
+
 <div class="container">
 
 <h2>Products</h2>
 
-<button onclick="loadProducts()">
+
+<div class="top-actions">
+
+<button class="btn-blue"
+onclick="loadProducts()">
 Refresh
 </button>
 
-<button id="addBtn"
+<button class="btn-green"
 onclick="window.location='add-product.html'">
 Add Product
 </button>
 
-<br><br>
+</div>
+
+
+<div class="table-card">
 
 <table>
 
@@ -55,11 +63,11 @@ Add Product
 
 </div>
 
-<script src="script.js"></script>
+
+</div>
+
+
 <script src="script.js"></script>
 
-<script>
-loadProducts();
-</script>
 </body>
 </html>

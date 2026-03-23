@@ -13,4 +13,11 @@ public interface OrderRepository
 
     @Query("SELECT COUNT(o) FROM Order o")
     Long getTotalOrders();
+
+    @Query("""
+    SELECT SUM(o.totalAmount)
+    FROM Order o
+    WHERE DATE(o.orderDate) = CURRENT_DATE
+    """)
+    Double getTodaySales();
 }

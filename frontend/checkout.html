@@ -29,12 +29,12 @@ Checkout System
 <h2>Checkout</h2>
 
 
-<div style="display:flex; gap:40px;">
+<div style="display:flex; gap:30px;">
 
 
 <!-- PRODUCTS -->
 
-<div>
+<div class="card" style="width:50%">
 
 <h3>Products</h3>
 
@@ -57,7 +57,7 @@ Checkout System
 
 <!-- CART -->
 
-<div>
+<div class="card" style="width:50%">
 
 <h3>Cart</h3>
 
@@ -79,11 +79,13 @@ Checkout System
 
 <h3 id="total">Total: 0</h3>
 
-<button onclick="checkout()">
+<br>
+
+<button class="btn-green" onclick="checkout()">
 Checkout
 </button>
 
-<button onclick="clearCart()">
+<button class="btn-red" onclick="clearCart()">
 Clear Cart
 </button>
 

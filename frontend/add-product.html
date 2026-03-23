@@ -5,7 +5,12 @@
     <link rel="stylesheet" href="style.css">
 </head>
 <body>
+
 <nav>
+
+<b style="color:white;margin-right:20px">
+Checkout System
+</b>
 
 <button onclick="goProducts()">Products</button>
 <button onclick="goCheckout()">Checkout</button>
@@ -14,22 +19,25 @@
 
 </nav>
 
+<h2 style="text-align:center;">Add New Product</h2>
 
-<h2>Add Product</h2>
+<div class="form-card">
 
-<input id="name" placeholder="Name">
+<input id="name" placeholder="Product Name">
 <input id="price" placeholder="Price">
 <input id="quantity" placeholder="Quantity">
 
-<button onclick="addProduct()">Add Product</button>
+<button class="btn-green" onclick="addProduct()">Add Product</button>
 
 <p id="msg"></p>
 
 <br>
 
-<a href="products.html">
-    <button>Back</button>
-</a>
+<button class="btn-blue" onclick="window.location='products.html'">
+Back to Products
+</button>
+
+</div>
 
 <script src="script.js"></script>
 

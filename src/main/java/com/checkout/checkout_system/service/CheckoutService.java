@@ -62,23 +62,38 @@ public Order checkout(CheckoutRequest request) {
 
         productRepository.save(product);
 
-        double price =
-                product.getPrice() * qty;
+        double unitPrice = product.getPrice();
 
-        total += price;
+                double subtotal = unitPrice * qty;
 
-        OrderItem orderItem =
-                new OrderItem(
-                        order,
-                        product,
-                        qty,
-                        price
-                );
+                total += subtotal;
 
+                OrderItem orderItem =
+                        new OrderItem(
+                                order,
+                                product,
+                                qty,
+                                unitPrice   // store unit price, not subtotal
+                        );
         orderItemRepository.save(orderItem);
     }
 
+    // ✅ total
     order.setTotalAmount(total);
+
+    // ✅ PAYMENT PART
+    order.setPaymentMethod(
+            request.getPaymentMethod()
+    );
+
+    order.setPaidAmount(
+            request.getPaidAmount()
+    );
+
+    double change =
+            request.getPaidAmount() - total;
+
+    order.setChangeAmount(change);
 
     return orderRepository.save(order);
 }

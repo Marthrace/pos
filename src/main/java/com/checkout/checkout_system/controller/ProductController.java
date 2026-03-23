@@ -25,4 +25,10 @@ public class ProductController {
     public List<Product> getAll() {
         return productService.getAll();
     }
+
+    // Fix: Call the service, not repository
+    @GetMapping("/low")
+    public List<Product> lowStock() {
+        return productService.getLowStock();
+    }
 }

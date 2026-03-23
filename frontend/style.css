@@ -1,23 +1,27 @@
 body {
-    font-family: Arial, sans-serif;
+    font-family: Arial, Helvetica, sans-serif;
     margin: 0;
-    background: #f4f6f8;
+    background: #f4f6f9;
 }
+
 
 /* NAVBAR */
 
 nav {
-    background: #1f2937;
+    background: #1e293b;
     padding: 10px;
+    display: flex;
+    align-items: center;
 }
 
 nav button {
-    background: #3b82f6;
-    border: none;
-    color: white;
+    margin-right: 10px;
     padding: 8px 12px;
-    margin-right: 5px;
+    border: none;
+    background: #3b82f6;
+    color: white;
     cursor: pointer;
+    border-radius: 5px;
 }
 
 nav button:hover {
@@ -36,55 +40,243 @@ nav button:hover {
 
 .card {
     background: white;
-    padding: 20px;
-    width: 350px;
-    margin: auto;
-    margin-top: 50px;
-    box-shadow: 0 0 10px gray;
-    border-radius: 5px;
+    padding: 15px;
+    border-radius: 10px;
+    box-shadow: 0 0 10px #ccc;
 }
-
-
-/* INPUT */
-
-input, select {
-    width: 100%;
-    padding: 8px;
-    margin-top: 5px;
-}
-
-
-/* BUTTON */
-
-button {
-    padding: 8px 12px;
-    margin-top: 10px;
-   
-    cursor: pointer;
-}
-
 
 
 /* TABLE */
 
 table {
     border-collapse: collapse;
-    width: 70%;
+    width: 100%;
     background: white;
 }
 
-table, th, td {
-    border: 1px solid #ccc;
-    padding: 6px;
-}
-
 th {
-    background: #e5e7eb;
+    background: #1e293b;
+    color: white;
+    padding: 8px;
 }
 
-h2, h3 {
-    margin-top: 5px;
+td {
+    border: 1px solid #ddd;
+    padding: 8px;
+}
+
+tr:nth-child(even) {
+    background: #f2f2f2;
 }
 
 
+/* BUTTONS */
 
+button {
+    padding: 8px 12px;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+}
+
+button:hover {
+    opacity: 0.9;
+}
+
+.btn-green {
+    background: #16a34a;
+    color: white;
+}
+
+.btn-red {
+    background: #dc2626;
+    color: white;
+}
+
+.btn-blue {
+    background: #2563eb;
+    color: white;
+}
+
+
+/* TOTAL */
+
+#total {
+    background: #111827;
+    color: white;
+    padding: 10px;
+    border-radius: 5px;
+}
+
+/* RECEIPT */
+
+.receipt-box {
+    width: 350px;
+    margin: 30px auto;
+    background: white;
+    padding: 15px;
+    border-radius: 10px;
+    box-shadow: 0 0 10px #aaa;
+}
+
+.receipt-box h2 {
+    text-align: center;
+}
+
+.receipt-box table {
+    width: 100%;
+    font-size: 14px;
+}
+
+.receipt-total {
+    margin-top: 10px;
+    padding-top: 10px;
+    border-top: 2px dashed black;
+}
+
+.receipt-buttons {
+    text-align: center;
+    margin-top: 15px;
+}
+
+.receipt-buttons button {
+    margin: 5px;
+}
+
+/* REPORT PAGE */
+
+.page-title {
+    margin: 20px;
+}
+
+.actions {
+    margin: 20px;
+}
+
+.actions button {
+    margin-right: 10px;
+}
+
+.card {
+    background: white;
+    padding: 15px;
+    border-radius: 10px;
+    box-shadow: 0 0 10px #ccc;
+    margin: 20px;
+}
+
+#report table {
+    width: 100%;
+}
+
+/* PRODUCTS PAGE */
+
+.top-actions {
+    margin-bottom: 15px;
+}
+
+.top-actions button {
+    margin-right: 10px;
+}
+
+.table-card {
+    background: white;
+    padding: 15px;
+    border-radius: 10px;
+    box-shadow: 0 0 10px #ccc;
+}
+
+/* ADD PRODUCT PAGE */
+
+.form-card {
+    background: white;
+    padding: 20px;
+    border-radius: 10px;
+    box-shadow: 0 0 10px #ccc;
+    max-width: 400px;
+    margin: 20px auto;
+}
+
+.form-card input {
+    display: block;
+    width: 100%;
+    padding: 8px 10px;
+    margin-bottom: 10px;
+    border-radius: 5px;
+    border: 1px solid #ccc;
+    font-size: 16px;
+}
+
+.form-card button {
+    padding: 10px 15px;
+    border: none;
+    border-radius: 5px;
+    font-size: 16px;
+    cursor: pointer;
+}
+
+.btn-green {
+    background-color: #4CAF50;
+    color: white;
+}
+
+.btn-blue {
+    background-color: #2196F3;
+    color: white;
+}
+
+.btn-red {
+    background-color: #f44336;
+    color: white;
+}
+
+#msg {
+    margin-top: 10px;
+    font-weight: bold;
+    color: darkgreen;
+}
+
+/* LOGIN / SIGNUP PAGE */
+
+.card {
+    background: white;
+    padding: 25px 30px;
+    border-radius: 12px;
+    box-shadow: 0 0 15px #ccc;
+    max-width: 350px;
+    margin: 60px auto;
+    text-align: center;
+    font-family: Arial, sans-serif;
+}
+
+.card input {
+    display: block;
+    width: 100%;
+    padding: 10px 12px;
+    margin: 12px 0;
+    border-radius: 6px;
+    border: 1px solid #ccc;
+    font-size: 16px;
+}
+
+.card button {
+    padding: 10px 18px;
+    border: none;
+    border-radius: 6px;
+    font-size: 16px;
+    cursor: pointer;
+    margin-top: 10px;
+    width: 100%;
+}
+
+.btn-green {
+    background-color: #4CAF50;
+    color: white;
+}
+
+.card a {
+    display: block;
+    margin-top: 15px;
+    text-decoration: none;
+    color: #2196F3;
+}

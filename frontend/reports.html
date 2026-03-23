@@ -1,11 +1,20 @@
 <!DOCTYPE html>
 <html>
 <head>
-    <title>Reports</title>
-    <link rel="stylesheet" href="style.css">
+
+<title>Reports</title>
+
+<link rel="stylesheet" href="style.css">
+
 </head>
+
 <body>
+
 <nav>
+
+<b style="color:white;margin-right:20px">
+Checkout System
+</b>
 
 <button onclick="goProducts()">Products</button>
 <button onclick="goCheckout()">Checkout</button>
@@ -15,17 +24,45 @@
 </nav>
 
 
-<h2>Reports</h2>
+<h2 class="page-title">
+Reports Dashboard
+</h2>
 
-<button onclick="loadReport()">Load Report</button>
+
+<div class="actions">
+
+<button class="btn-blue"
+onclick="loadReport()">
+Generate Report
+</button>
+
+<button class="btn-red"
+onclick="loadLowStock()">
+Low Stock
+</button>
+
+</div>
+
+
+
+<div class="card">
+
+<h3>Result</h3>
 
 <div id="report"></div>
 
-<br>
+</div>
 
-<a href="products.html">
-    <button>Back</button>
-</a>
+
+<div style="margin:20px">
+
+<button class="btn-green"
+onclick="goProducts()">
+Back
+</button>
+
+</div>
+
 
 <script src="script.js"></script>
 

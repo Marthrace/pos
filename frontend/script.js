@@ -217,8 +217,15 @@ function removeItem(index) {
 
 // Function to handle checkout process
 function checkout() {
-
     const auth = localStorage.getItem("auth");
+
+    let paid = prompt("Enter cash paid by customer:");
+
+    if (!paid || isNaN(paid) || paid <= 0) {
+        return alert("Invalid amount");
+    }
+
+    paid = Number(paid);
 
     fetch("http://localhost:8080/checkout", {
         method: "POST",
@@ -227,23 +234,20 @@ function checkout() {
             "Authorization": auth
         },
         body: JSON.stringify({
-            items: cart
+            items: cart,
+            paidAmount: paid,
+            paymentMethod: "CASH"
         })
     })
-    .then(res => res.json())
-  .then(data => {
-
-    alert(
-        "Order saved successfully"
-    );
-
-    cart = [];
-
-    renderCart();
-
-});
+    .then(res => {
+        if (!res.ok) throw new Error("Checkout failed");
+        return res.json();
+    })
+    .then(receipt => {
+        window.location = `receipt.html?orderId=${receipt.orderId}`;
+    })
+    .catch(err => alert(err.message));
 }
-
 // Function to load sales report for admin users
 function loadReport() {
 
@@ -388,6 +392,9 @@ function signup() {
             "User created successfully";
             window.location.href = "login.html"; 
     })
+
+
+    
     .catch(err => {
         console.error(err);
         document.getElementById("msg").innerText =
@@ -406,5 +413,35 @@ function checkAuth() {
         window.location = "login.html";
 
     }
+
+}
+
+
+function loadLowStock() {
+
+    const auth = localStorage.getItem("auth");
+
+    fetch("http://localhost:8080/products/low", {
+        headers: {
+            "Authorization": auth
+        }
+    })
+    .then(res => res.json())
+    .then(data => {
+
+        let div =
+            document.getElementById("report");
+
+        div.innerHTML +=
+            "<h3>Low Stock</h3>";
+
+        data.forEach(p => {
+
+            div.innerHTML +=
+                p.name + " qty=" + p.quantity + "<br>";
+
+        });
+
+    });
 
 }

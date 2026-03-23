@@ -1,0 +1,119 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+
+<meta charset="UTF-8">
+<title>Receipt</title>
+
+<link rel="stylesheet" href="style.css">
+
+</head>
+
+<body>
+
+<div id="receiptContainer"></div>
+
+<script>
+
+function getQueryParam(param) {
+    const urlParams = new URLSearchParams(window.location.search);
+    return urlParams.get(param);
+}
+
+window.onload = function() {
+
+    const orderId = getQueryParam("orderId");
+
+    if (!orderId) return;
+
+    const auth = localStorage.getItem("auth");
+
+    fetch(`http://localhost:8080/receipt/${orderId}`, {
+        headers: { "Authorization": auth }
+    })
+    .then(res => res.json())
+    .then(data => {
+
+        const container =
+            document.getElementById("receiptContainer");
+
+        container.innerHTML = `
+
+        <div class="receipt-box">
+
+            <h2>Checkout System</h2>
+
+            <p><b>Order:</b> ${data.orderId}</p>
+            <p><b>Date:</b> ${new Date(data.date).toLocaleString()}</p>
+            <p><b>Payment:</b> ${data.paymentMethod}</p>
+
+            <table>
+
+                <thead>
+                    <tr>
+                        <th>Item</th>
+                        <th>Qty</th>
+                        <th>Price</th>
+                        <th>Total</th>
+                    </tr>
+                </thead>
+
+                <tbody>
+
+                ${data.items.map(i => `
+
+                    <tr>
+                        <td>${i.productName}</td>
+                        <td>${i.quantity}</td>
+                        <td>${i.price.toFixed(2)}</td>
+                        <td>${(i.price * i.quantity).toFixed(2)}</td>
+                    </tr>
+
+                `).join('')}
+
+                </tbody>
+
+            </table>
+
+
+            <div class="receipt-total">
+
+                <p><b>Total:</b> GHS ${data.total.toFixed(2)}</p>
+                <p><b>Paid:</b> GHS ${data.paid.toFixed(2)}</p>
+                <p><b>Change:</b> GHS ${data.change.toFixed(2)}</p>
+
+            </div>
+
+
+            <p style="text-align:center">
+            Thank you for shopping
+            </p>
+
+
+            <div class="receipt-buttons">
+
+                <button class="btn-blue"
+                    onclick="window.print()">
+                    Print
+                </button>
+
+                <button class="btn-green"
+                    onclick="window.location='checkout.html'">
+                    Back
+                </button>
+
+            </div>
+
+        </div>
+
+        `;
+
+    })
+    .catch(err => alert("Receipt not found"));
+
+}
+
+</script>
+
+</body>
+</html>
