@@ -13,13 +13,13 @@
 <nav>
 
 <b style="color:white;margin-right:20px">
-Checkout System
+CHECKOUT
 </b>
 
 <button onclick="goProducts()">Products</button>
 <button onclick="goCheckout()">Checkout</button>
 <button onclick="goReports()">Reports</button>
-<button onclick="logout()">Logout</button>
+
 
 </nav>
 
@@ -37,6 +37,15 @@ Checkout System
 <div class="card" style="width:50%">
 
 <h3>Products</h3>
+
+<!-- Search bar -->
+<input
+    type="text"
+    id="productSearch"
+    placeholder="Search product..."
+    onkeyup="searchProducts()"
+    style="width:100%; padding:5px; margin-bottom:10px;"
+>
 
 <table>
     <thead>
@@ -98,6 +107,24 @@ Clear Cart
 
 
 </div>
+
+<div id="inputModal" class="modal">
+
+    <div class="modal-box">
+
+        <h3 id="modalTitle">Enter value</h3>
+
+        <input id="modalInput" type="number">
+
+        <br><br>
+
+        <button onclick="modalOk()">OK</button>
+        <button onclick="modalCancel()">Cancel</button>
+
+    </div>
+
+</div>
+
 
 
 <script src="script.js"></script>

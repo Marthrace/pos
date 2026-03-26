@@ -26,5 +26,18 @@ public class UserController {
     ) {
         return userService.createUser(username, password, role);
     }
-    
+
+    // ✅ NEW
+    @PostMapping("/reset-password")
+public User resetPassword(
+        @RequestParam String adminUsername,
+        @RequestParam String username,
+        @RequestParam String newPassword
+) {
+    return userService.resetPassword(
+            adminUsername,
+            username,
+            newPassword
+        );
+    }
 }

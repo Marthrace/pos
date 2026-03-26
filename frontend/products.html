@@ -1,4 +1,4 @@
-<!DOCTYPE html>
+ <!DOCTYPE html>
 <html>
 <head>
 
@@ -8,17 +8,20 @@
 
 </head>
 
-<body onload="checkAuth(); loadProducts()">
+<body onload="checkAuth(); loadProducts(); checkAdminUI()">
 
 <nav>
 
 <b style="color:white;margin-right:20px">
-Checkout System
+CHECKOUT
 </b>
 
 <button onclick="goProducts()">Products</button>
 <button onclick="goCheckout()">Checkout</button>
 <button onclick="goReports()">Reports</button>
+<button id="resetBtn" onclick="openResetModal()">
+Reset Password
+</button>
 <button onclick="logout()">Logout</button>
 
 </nav>
@@ -66,6 +69,70 @@ Add Product
 
 </div>
 
+<!-- INPUT MODAL -->
+<div id="inputModal" class="modal">
+
+    <div class="modal-box">
+
+        <h3 id="modalTitle">Enter value</h3>
+
+        <input id="modalInput" type="password">
+
+        <br><br>
+
+        <button onclick="modalOk()">Confirm</button>
+        <button onclick="modalCancel()">Cancel</button>
+
+    </div>
+
+</div>
+
+
+<!-- LOGOUT MODAL -->
+<div id="passwordModal" class="modal">
+
+    <div class="modal-box">
+
+        <h3>Enter password to confirm logout</h3>
+
+        <input id="passwordInput" type="password">
+
+        <br><br>
+
+        <button onclick="passwordOk()">Confirm</button>
+        <button onclick="passwordCancel()">Cancel</button>
+
+    </div>
+
+</div>
+
+
+<!-- RESET MODAL -->
+<div id="resetModal" class="modal">
+
+    <div class="modal-box">
+
+        <h3>Admin Reset Password</h3>
+
+        <input id="resetUsername" placeholder="Username">
+
+        <input id="resetPassword"
+               type="password"
+               placeholder="New Password">
+
+        <br><br>
+
+        <button onclick="resetPasswordAdmin()">
+            Reset
+        </button>
+
+        <button onclick="closeResetModal()">
+            Cancel
+        </button>
+
+    </div>
+
+</div>
 
 <script src="script.js"></script>
 

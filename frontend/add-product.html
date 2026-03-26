@@ -9,7 +9,7 @@
 <nav>
 
 <b style="color:white;margin-right:20px">
-Checkout System
+CHECKOUT
 </b>
 
 <button onclick="goProducts()">Products</button>
@@ -36,6 +36,51 @@ Checkout System
 <button class="btn-blue" onclick="window.location='products.html'">
 Back to Products
 </button>
+
+</div>
+
+<div id="confirmModal" class="modal">
+
+    <div class="modal-box">
+
+        <h3 id="confirmText">
+            Are you sure you want to logout?
+        </h3>
+
+        <button onclick="confirmYes()">
+            Yes
+        </button>
+
+        <button onclick="confirmNo()">
+            Cancel
+        </button>
+
+    </div>
+
+</div>
+
+
+<div id="passwordModal" class="modal">
+
+    <div class="modal-box">
+
+        <h3>
+            Enter password to confirm logout
+        </h3>
+
+        <input id="passwordInput" type="password">
+
+        <br><br>
+
+        <button onclick="passwordOk()">
+            Confirm
+        </button>
+
+        <button onclick="passwordCancel()">
+            Cancel
+        </button>
+
+    </div>
 
 </div>
 

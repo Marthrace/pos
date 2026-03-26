@@ -1,4 +1,4 @@
-function login() {
+/*function login() {
 
     const username = document.getElementById("username").value;
     const password = document.getElementById("password").value;
@@ -27,8 +27,41 @@ function login() {
 
     });
 
-}
+}*/
 
+function login() {
+
+    const username = document.getElementById("username").value;
+    const password = document.getElementById("password").value;
+
+    fetch("http://localhost:8080/products", {
+        method: "GET",
+        headers: {
+            "Authorization": "Basic " + btoa(username + ":" + password)
+        }
+    })
+    .then(res => {
+
+        if (res.status === 200) {
+
+            localStorage.setItem("auth",
+                "Basic " + btoa(username + ":" + password));
+
+            // ✅ Move this here, inside login
+            localStorage.setItem("user", username);
+
+            window.location = "products.html";
+
+        } else {
+
+            document.getElementById("msg").innerText =
+                "Login failed";
+
+        }
+
+    });
+
+}
 // Function to handle product addition for admin users
 function addProduct() {
 
@@ -153,24 +186,60 @@ function loadProducts() {
 
 }
 // Function to add products to cart with quantity input
+
 function addToCart(id) {
 
-    let qty =
-        prompt("Quantity:");
+    openModal("Quantity", function(qty) {
 
-    qty = parseInt(qty);
+        qty = parseInt(qty);
 
-    if (!qty || qty <= 0) return;
+        if (!qty || qty <= 0) return;
 
-    cart.push({
-        productId: id,
-        quantity: qty
+        cart.push({
+            productId: id,
+            quantity: qty
+        });
+
+        renderCart();
+
     });
-
-    renderCart();
 
 }
 
+// new
+let modalCallback = null;
+
+function openModal(title, callback) {
+
+    document.getElementById("modalTitle").innerText = title;
+
+    document.getElementById("modalInput").value = "";
+
+    modalCallback = callback;
+
+    document.getElementById("inputModal").style.display = "block";
+}
+
+function modalOk() {
+
+    const val =
+        document.getElementById("modalInput").value;
+
+    document.getElementById("inputModal").style.display = "none";
+
+    if (modalCallback) {
+
+        modalCallback(val);
+
+    }
+
+}
+
+function modalCancel() {
+
+    document.getElementById("inputModal").style.display = "none";
+
+}
 // Function to render cart items and total amount
 function renderCart() {
 
@@ -217,38 +286,40 @@ function removeItem(index) {
 
 // Function to handle checkout process
 function checkout() {
+
     const auth = localStorage.getItem("auth");
 
-    let paid = prompt("Enter cash paid by customer:");
+    openModal("Cash paid", function(paid) {
 
-    if (!paid || isNaN(paid) || paid <= 0) {
-        return alert("Invalid amount");
-    }
+        if (!paid || isNaN(paid) || paid <= 0) return;
 
-    paid = Number(paid);
+        paid = Number(paid);
 
-    fetch("http://localhost:8080/checkout", {
-        method: "POST",
-        headers: {
-            "Content-Type": "application/json",
-            "Authorization": auth
-        },
-        body: JSON.stringify({
-            items: cart,
-            paidAmount: paid,
-            paymentMethod: "CASH"
+        fetch("http://localhost:8080/checkout", {
+            method: "POST",
+            headers: {
+                "Content-Type": "application/json",
+                "Authorization": auth
+            },
+            body: JSON.stringify({
+                items: cart,
+                paidAmount: paid,
+                paymentMethod: "CASH"
+            })
         })
-    })
-    .then(res => {
-        if (!res.ok) throw new Error("Checkout failed");
-        return res.json();
-    })
-    .then(receipt => {
-        window.location = `receipt.html?orderId=${receipt.orderId}`;
-    })
-    .catch(err => alert(err.message));
+        .then(res => res.json())
+        .then(receipt => {
+
+            window.location =
+                `receipt.html?orderId=${receipt.orderId}`;
+
+        });
+
+    });
+
 }
 // Function to load sales report for admin users
+
 function loadReport() {
 
     const auth = localStorage.getItem("auth");
@@ -258,24 +329,52 @@ function loadReport() {
             "Authorization": auth
         }
     })
-    .then(res => res.json())
-    .then(data => {
+    .then(res => {
 
         const div = document.getElementById("report");
 
-        div.innerHTML = "";
-
-        for (let key in data) {
-
-            div.innerHTML +=
-                "<p>" + key + " : " + data[key] + "</p>";
-
+        // 🔴 HANDLE 403 (DISPLAY IN UI)
+        if (res.status === 403) {
+            div.innerHTML = `
+                <h3 style="color:red;">Access Denied</h3>
+                <p>You are not allowed to view reports.</p>
+            `;
+            return null;
         }
 
+        // 🔴 HANDLE 401
+        if (res.status === 401) {
+            div.innerHTML = `
+                <h3 style="color:red;">Session Expired</h3>
+                <p>Please login again.</p>
+            `;
+            return null;
+        }
+
+        return res.json();
+    })
+    .then(data => {
+
+        if (!data) return;
+
+        const div = document.getElementById("report");
+
+        div.innerHTML = "<h3>Summary</h3>";
+
+        for (let key in data) {
+            div.innerHTML += `<p>${key} : ${data[key]}</p>`;
+        }
+
+    })
+    .catch(err => {
+        console.error(err);
+
+        document.getElementById("report").innerHTML = `
+            <h3 style="color:red;">Error</h3>
+            <p>Failed to load report.</p>
+        `;
     });
-
 }
-
 // Navigation functions
 function goProducts() {
     window.location = "products.html";
@@ -291,56 +390,50 @@ function goReports() {
 
 // Logout function to clear authentication and redirect to login page
 function logout() {
+    
+    openModal("Enter password to logout", function(password) {
 
-    const authStored =
-        localStorage.getItem("auth");
+        const authStored =
+            localStorage.getItem("auth");
 
-    if (!authStored) {
-        window.location = "login.html";
-        return;
-    }
+        const decoded =
+            atob(authStored.split(" ")[1]);
 
-    const decoded =
-        atob(authStored.split(" ")[1]);
+        const username =
+            decoded.split(":")[0];
 
-    const username =
-        decoded.split(":")[0];
+        const auth =
+            "Basic " + btoa(username + ":" + password);
 
-    const password =
-        prompt("Enter password to logout:");
+        fetch("http://localhost:8080/products", {
+            headers: {
+                "Authorization": auth
+            }
+        })
+        .then(res => {
 
-    if (!password) return;
+            if (res.status === 200) {
 
-    const auth =
-        "Basic " + btoa(username + ":" + password);
+                localStorage.clear();
 
-    fetch("http://localhost:8080/products", {
-        headers: {
-            "Authorization": auth
-        }
-    })
-    .then(res => {
+                window.location = "login.html";
 
-        if (res.status === 200) {
+            } else {
 
-            localStorage.removeItem("auth");
-            localStorage.removeItem("user");
+                alert("Wrong password");
 
-            window.location = "login.html";
+            }
 
-        } else {
-
-            alert("Wrong password");
-
-        }
+        });
 
     });
 
 }
+
 // Set logged in user in localStorage for role-based access control
-localStorage.setItem("user", username);
+//localStorage.setItem("user", username);
 // Hide add product button for non-admin users
-window.onload = function () {
+/*window.onload = function () {
 
     const user = localStorage.getItem("user");
 
@@ -352,7 +445,7 @@ window.onload = function () {
 
     }
 
-};
+};*/
 
 function clearCart() {
 
@@ -444,4 +537,110 @@ function loadLowStock() {
 
     });
 
+}
+
+function checkAdminUI() {
+
+    const auth = localStorage.getItem("auth");
+
+    if (!auth) return;
+
+    const decoded =
+        atob(auth.split(" ")[1]);
+
+    const username =
+        decoded.split(":")[0];
+
+    if (username !== "admin") {
+
+        const btn =
+            document.getElementById("resetBtn");
+
+        if (btn) btn.style.display = "none";
+
+    }
+
+}
+
+function openResetModal() {
+
+    document.getElementById("resetModal")
+        .style.display = "block";
+
+}
+
+function closeResetModal() {
+
+    document.getElementById("resetModal")
+        .style.display = "none";
+
+}
+
+function resetPasswordAdmin() {
+
+    const username =
+        document.getElementById("resetUsername").value;
+
+    const newPassword =
+        document.getElementById("resetPassword").value;
+
+    const auth =
+        localStorage.getItem("auth");
+
+    const decoded =
+        atob(auth.split(" ")[1]);
+
+    const adminUsername =
+        decoded.split(":")[0];
+
+    fetch(
+        "http://localhost:8080/users/reset-password",
+        {
+            method: "POST",
+            headers: {
+                "Content-Type":
+                "application/x-www-form-urlencoded",
+                "Authorization": auth
+            },
+            body:
+                "adminUsername=" +
+                encodeURIComponent(adminUsername) +
+                "&username=" +
+                encodeURIComponent(username) +
+                "&newPassword=" +
+                encodeURIComponent(newPassword)
+        }
+    )
+    .then(res => res.text())
+    .then(data => {
+
+        alert("Password reset");
+
+        closeResetModal();
+
+    })
+    .catch(err => {
+
+        alert("Error");
+
+    });
+
+}
+
+function searchProducts() {
+    const input = document.getElementById("productSearch").value.toLowerCase();
+    const table = document.getElementById("productsTable");
+    const rows = table.getElementsByTagName("tr");
+
+    for (let i = 0; i < rows.length; i++) {
+        const nameCell = rows[i].getElementsByTagName("td")[0]; // first column is name
+        if (nameCell) {
+            const name = nameCell.textContent.toLowerCase();
+            if (name.indexOf(input) > -1) {
+                rows[i].style.display = ""; // show row
+            } else {
+                rows[i].style.display = "none"; // hide row
+            }
+        }
+    }
 }
