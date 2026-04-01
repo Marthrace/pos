@@ -1,34 +1,52 @@
 <!DOCTYPE html>
 <html>
 <head>
-
-<title>Login</title>
-
-<link rel="stylesheet" href="style.css">
-
+    <title>Login</title>
+    <link rel="stylesheet" href="style.css">
 </head>
+
 <body>
 
-<div class="card">
+<div class="login-wrapper">
 
-<h2>Login</h2>
+    <div class="login-card">
 
-<input id="username" placeholder="Username">
-<input id="password" type="password" placeholder="Password">
+        <h2>Login</h2>
 
-<button class="btn-green" onclick="login()">
-Login
-</button>
+        <input id="username" type="text" placeholder="Username">
+        <input id="password" type="password" placeholder="Password">
 
-<p id="msg"></p>
+        <button class="btn-green" onclick="login()">
+            Login
+        </button>
 
-<a href="signup.html">
-Create account
-</a>
+        <p id="msg"></p>
+
+        <a href="signup.html">
+            Create account
+        </a>
+
+    </div>
 
 </div>
 
 <script src="script.js"></script>
 
+
+<script>
+window.onload = function() {
+    document.getElementById("username").focus();
+};
+</script>
+
+<script>
+document.addEventListener("keydown", function(e) {
+    if (e.key === "Enter") {
+        login();
+    }
+});
+</script>
+
 </body>
 </html>
+

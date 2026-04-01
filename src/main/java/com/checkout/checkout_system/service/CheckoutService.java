@@ -1,5 +1,7 @@
 package com.checkout.checkout_system.service;
 
+import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -8,9 +10,11 @@ import com.checkout.checkout_system.dto.CheckoutRequest;
 import com.checkout.checkout_system.model.Order;
 import com.checkout.checkout_system.model.OrderItem;
 import com.checkout.checkout_system.model.Product;
+import com.checkout.checkout_system.model.User;
 import com.checkout.checkout_system.repository.OrderItemRepository;
 import com.checkout.checkout_system.repository.OrderRepository;
 import com.checkout.checkout_system.repository.ProductRepository;
+import com.checkout.checkout_system.repository.UserRepository;
 
 @Service
 public class CheckoutService {
@@ -18,83 +22,62 @@ public class CheckoutService {
     private final ProductRepository productRepository;
     private final OrderRepository orderRepository;
     private final OrderItemRepository orderItemRepository;
+    private final UserRepository userRepository;
 
     public CheckoutService(ProductRepository productRepository,
                            OrderRepository orderRepository,
-                           OrderItemRepository orderItemRepository) {
+                           OrderItemRepository orderItemRepository,
+                           UserRepository userRepository) {
         this.productRepository = productRepository;
         this.orderRepository = orderRepository;
         this.orderItemRepository = orderItemRepository;
+        this.userRepository = userRepository;
     }
 
-   @Transactional
-public Order checkout(CheckoutRequest request) {
+    @Transactional
+    public Order checkout(CheckoutRequest request) {
 
-    Order order = new Order();
+        // ✅ Get logged-in cashier
+        String username = ((UserDetails) SecurityContextHolder.getContext()
+                .getAuthentication().getPrincipal()).getUsername();
 
-    double total = 0;
+        User cashier = userRepository.findByUsername(username)
+                .orElseThrow(() -> new RuntimeException("Logged-in user not found"));
 
-    order = orderRepository.save(order);
+        Order order = new Order();
+        order.setCashier(cashier); // ✅ associate cashier with order
 
-    for (CheckoutItem item : request.getItems()) {
+        double total = 0;
+        order = orderRepository.save(order);
 
-        Product product =
-                productRepository
-                        .findById(item.getProductId())
-                        .orElseThrow();
+        for (CheckoutItem item : request.getItems()) {
+            Product product = productRepository.findById(item.getProductId())
+                    .orElseThrow(() -> new RuntimeException("Product not found"));
 
-        int qty = item.getQuantity();
+            int qty = item.getQuantity();
 
-        // ✅ check stock
-        if (qty > product.getQuantity()) {
+            // ✅ check stock
+            if (qty > product.getQuantity()) {
+                throw new RuntimeException("Not enough stock for " + product.getName());
+            }
 
-            throw new RuntimeException(
-                    "Not enough stock for "
-                            + product.getName()
-            );
+            // ✅ decrease stock
+            product.setQuantity(product.getQuantity() - qty);
+            productRepository.save(product);
+
+            double unitPrice = product.getPrice();
+            total += unitPrice * qty;
+
+            OrderItem orderItem = new OrderItem(order, product, qty, unitPrice);
+            orderItemRepository.save(orderItem);
         }
 
-        // ✅ decrease stock
-        int newQty =
-                product.getQuantity() - qty;
+        // ✅ set totals and payment
+        order.setTotalAmount(total);
+        order.setPaymentMethod(request.getPaymentMethod());
+        order.setPaidAmount(request.getPaidAmount());
+        order.setChangeAmount(request.getPaidAmount() - total);
 
-        product.setQuantity(newQty);
-
-        productRepository.save(product);
-
-        double unitPrice = product.getPrice();
-
-                double subtotal = unitPrice * qty;
-
-                total += subtotal;
-
-                OrderItem orderItem =
-                        new OrderItem(
-                                order,
-                                product,
-                                qty,
-                                unitPrice   // store unit price, not subtotal
-                        );
-        orderItemRepository.save(orderItem);
+        return orderRepository.save(order);
     }
-
-    // ✅ total
-    order.setTotalAmount(total);
-
-    // ✅ PAYMENT PART
-    order.setPaymentMethod(
-            request.getPaymentMethod()
-    );
-
-    order.setPaidAmount(
-            request.getPaidAmount()
-    );
-
-    double change =
-            request.getPaidAmount() - total;
-
-    order.setChangeAmount(change);
-
-    return orderRepository.save(order);
-}
 }

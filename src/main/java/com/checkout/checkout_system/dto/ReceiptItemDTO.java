@@ -26,3 +26,4 @@ public class ReceiptItemDTO {
         return price;
     }
 }
+

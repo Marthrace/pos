@@ -7,81 +7,60 @@
 <body>
 
 <nav>
+    <b style="color:white;margin-right:20px">CHECKOUT</b>
 
-<b style="color:white;margin-right:20px">
-CHECKOUT
-</b>
-
-<button onclick="goProducts()">Products</button>
-<button onclick="goCheckout()">Checkout</button>
-<button onclick="goReports()">Reports</button>
-<button onclick="logout()">Logout</button>
-
+    <button onclick="goProducts()">Products</button>
+    <button onclick="goCheckout()">Checkout</button>
+    <button onclick="goReports()">Reports</button>
+    <button onclick="logout()">Logout</button>
 </nav>
 
-<h2 style="text-align:center;">Add New Product</h2>
+<div class="container">
 
-<div class="form-card">
+    <div class="page-header">
+        <h2>Add New Product</h2>
+        <p>Enter product details below</p>
+    </div>
 
-<input id="name" placeholder="Product Name">
-<input id="price" placeholder="Price">
-<input id="quantity" placeholder="Quantity">
+    <div class="form-wrapper">
+        <div class="form-card">
 
-<button class="btn-green" onclick="addProduct()">Add Product</button>
+            <input id="name" type="text" placeholder="Product Name">
+            <input id="price" type="number" placeholder="Price">
+            <input id="quantity" type="number" placeholder="Quantity">
 
-<p id="msg"></p>
+            <button class="btn-green" onclick="addProduct()">
+                Add Product
+            </button>
 
-<br>
+            <p id="msg"></p>
 
-<button class="btn-blue" onclick="window.location='products.html'">
-Back to Products
-</button>
+            <button class="btn-blue back-btn" onclick="window.location='products.html'">
+                ← Back to Products
+            </button>
 
-</div>
-
-<div id="confirmModal" class="modal">
-
-    <div class="modal-box">
-
-        <h3 id="confirmText">
-            Are you sure you want to logout?
-        </h3>
-
-        <button onclick="confirmYes()">
-            Yes
-        </button>
-
-        <button onclick="confirmNo()">
-            Cancel
-        </button>
-
+        </div>
     </div>
 
 </div>
 
+<!-- MODALS (UNCHANGED) -->
+<div id="confirmModal" class="modal">
+    <div class="modal-box">
+        <h3 id="confirmText">Are you sure you want to logout?</h3>
+        <button onclick="confirmYes()">Yes</button>
+        <button onclick="confirmNo()">Cancel</button>
+    </div>
+</div>
 
 <div id="passwordModal" class="modal">
-
     <div class="modal-box">
-
-        <h3>
-            Enter password to confirm logout
-        </h3>
-
+        <h3>Enter password to confirm logout</h3>
         <input id="passwordInput" type="password">
-
         <br><br>
-
-        <button onclick="passwordOk()">
-            Confirm
-        </button>
-
-        <button onclick="passwordCancel()">
-            Cancel
-        </button>
-
+        <button onclick="passwordOk()">Confirm</button>
+        <button onclick="passwordCancel()">Cancel</button>
     </div>
-
 </div>
 
 <script src="script.js"></script>

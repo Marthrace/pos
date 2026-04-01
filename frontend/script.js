@@ -1,33 +1,3 @@
-/*function login() {
-
-    const username = document.getElementById("username").value;
-    const password = document.getElementById("password").value;
-
-    fetch("http://localhost:8080/products", {
-        method: "GET",
-        headers: {
-            "Authorization": "Basic " + btoa(username + ":" + password)
-        }
-    })
-    .then(res => {
-
-        if (res.status === 200) {
-
-            localStorage.setItem("auth",
-                "Basic " + btoa(username + ":" + password));
-
-            window.location = "products.html";
-
-        } else {
-
-            document.getElementById("msg").innerText =
-                "Login failed";
-
-        }
-
-    });
-
-}*/
 
 function login() {
 
@@ -114,12 +84,14 @@ function loadProductsForCheckout() {
     .then(res => res.json())
     .then(data => {
 
-        products = data;
+        const table = document.getElementById("productsTable");
 
-        const table =
-            document.getElementById("productsTable");
+        // ✅ ADD THIS LINE (CRITICAL FIX)
+        if (!table) return;
 
         table.innerHTML = "";
+
+        products = data;
 
         data.forEach(p => {
 
@@ -140,8 +112,10 @@ function loadProductsForCheckout() {
 
         });
 
+    })
+    .catch(err => {
+        console.error("Checkout load error:", err);
     });
-
 }
 
 let cart = [];
@@ -285,6 +259,7 @@ function removeItem(index) {
 }
 
 // Function to handle checkout process
+
 function checkout() {
 
     const auth = localStorage.getItem("auth");
@@ -308,15 +283,19 @@ function checkout() {
             })
         })
         .then(res => res.json())
-        .then(receipt => {
+        .then(order => {
 
+            // ✅ FIX: use order.id instead of order.orderId
             window.location =
-                `receipt.html?orderId=${receipt.orderId}`;
+                `receipt.html?orderId=${order.id}`;
 
+        })
+        .catch(err => {
+            console.error(err);
+            alert("Checkout failed");
         });
 
     });
-
 }
 // Function to load sales report for admin users
 
@@ -567,14 +546,33 @@ function openResetModal() {
     document.getElementById("resetModal")
         .style.display = "block";
 
+          // ✅ AUTO-FOCUS FIRST INPUT
+    setTimeout(() => {
+        document.getElementById("resetUsername").focus();
+    }, 100);
+
 }
 
 function closeResetModal() {
 
-    document.getElementById("resetModal")
-        .style.display = "none";
+    document.getElementById("resetModal").style.display = "none";
+
+    // ✅ CLEAR INPUTS
+    document.getElementById("resetUsername").value = "";
+    document.getElementById("resetPassword").value = "";
+    document.getElementById("confirmPassword").value = "";
+
+    // ✅ CLEAR MESSAGE
+    const msg = document.getElementById("resetMsg");
+    msg.innerText = "";
+    msg.className = "modal-msg";
+
+    // ✅ RESET BUTTON TEXT (optional safety)
+    const btn = document.getElementById("resetBtnAction");
+    if (btn) btn.innerText = "Reset Password";
 
 }
+
 
 function resetPasswordAdmin() {
 
@@ -582,16 +580,42 @@ function resetPasswordAdmin() {
         document.getElementById("resetUsername").value;
 
     const newPassword =
-        document.getElementById("resetPassword").value;
+        document.getElementById("resetPassword").value;const confirmPassword =
+    document.getElementById("confirmPassword").value;
 
+            if (newPassword !== confirmPassword) {
+                document.getElementById("resetMsg").innerText =
+                    "❌ Passwords do not match";
+                document.getElementById("resetMsg").className =
+                    "modal-msg error";
+                return;
+            }
+                if (!newPassword || !confirmPassword) {
+    document.getElementById("resetMsg").innerText =
+        "❌ Fill all fields";
+    return;
+}
     const auth =
         localStorage.getItem("auth");
+
+    const msg =
+        document.getElementById("resetMsg");
+
+    const btn =
+        document.getElementById("resetBtnAction");
 
     const decoded =
         atob(auth.split(" ")[1]);
 
     const adminUsername =
         decoded.split(":")[0];
+
+    // 🔄 loading state
+    msg.innerText = "Processing...";
+    msg.className = "modal-msg";
+
+    btn.disabled = true;
+    btn.innerText = "Resetting...";
 
     fetch(
         "http://localhost:8080/users/reset-password",
@@ -611,17 +635,37 @@ function resetPasswordAdmin() {
                 encodeURIComponent(newPassword)
         }
     )
-    .then(res => res.text())
-    .then(data => {
+    .then(res => {
 
-        alert("Password reset");
+        if (!res.ok) throw new Error();
 
-        closeResetModal();
+        return res.text();
 
     })
-    .catch(err => {
+    .then(() => {
 
-        alert("Error");
+        // ✅ SUCCESS (replaces alert)
+        msg.innerText = "✅ Password reset successfully!";
+        msg.className = "modal-msg success";
+
+        btn.disabled = false;
+        btn.innerText = "Done";
+
+        setTimeout(() => {
+            closeResetModal();
+            msg.innerText = "";
+            btn.innerText = "Reset Password";
+        }, 2000);
+
+    })
+    .catch(() => {
+
+        // ❌ ERROR (replaces alert)
+        msg.innerText = "❌ Failed to reset password";
+        msg.className = "modal-msg error";
+
+        btn.disabled = false;
+        btn.innerText = "Reset Password";
 
     });
 
@@ -644,3 +688,61 @@ function searchProducts() {
         }
     }
 }
+
+
+function loadCashierReport() {
+    const auth = localStorage.getItem("auth");
+    const username = localStorage.getItem("user"); // logged-in cashier
+
+    fetch(`http://localhost:8080/reports/cashier/${username}`, {
+        headers: {
+            "Authorization": auth
+        }
+    })
+    .then(res => {
+        const div = document.getElementById("report");
+
+        if (res.status === 403) {
+            div.innerHTML = `
+                <h3 style="color:red;">Access Denied</h3>
+                <p>You cannot view this report.</p>
+            `;
+            return null;
+        }
+
+        if (res.status === 401) {
+            div.innerHTML = `
+                <h3 style="color:red;">Session Expired</h3>
+                <p>Please login again.</p>
+            `;
+            return null;
+        }
+
+        return res.json();
+    })
+    .then(data => {
+        if (!data) return;
+
+        const div = document.getElementById("report");
+        div.innerHTML = `<h3>Today's Sales for ${data.cashierUsername}</h3>`;
+
+        data.items.forEach(item => {
+            div.innerHTML += `
+                <p>${item.productName} — Qty: ${item.quantitySold}, Total: ${item.total}</p>
+            `;
+        });
+
+        div.innerHTML += `
+            <p><strong>Total Items Sold: </strong>${data.totalItemsSold}</p>
+            <p><strong>Total Cash: </strong>${data.totalCash}</p>
+        `;
+    })
+    .catch(err => {
+        console.error(err);
+        document.getElementById("report").innerHTML = `
+            <h3 style="color:red;">Error</h3>
+            <p>Failed to load cashier report.</p>
+        `;
+    });
+}
+

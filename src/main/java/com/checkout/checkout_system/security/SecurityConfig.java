@@ -37,6 +37,9 @@ public SecurityFilterChain filterChain(HttpSecurity http)
                     .requestMatchers("/receipt/**")
                     .hasAnyRole("ADMIN", "MANAGER", "CASHIER")
                     
+                     .requestMatchers("/reports/cashier/**")
+                     .hasAnyRole("ADMIN", "MANAGER", "CASHIER")
+                    
                     .requestMatchers("/reports/**")
                     .hasAnyRole("ADMIN", "MANAGER")
 

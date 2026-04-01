@@ -8,7 +8,7 @@
 
 </head>
 
-<body>
+<body onload="checkAuth()">
 
 <nav>
 
@@ -20,49 +20,51 @@ CHECKOUT
 <button onclick="goCheckout()">Checkout</button>
 <button onclick="goReports()">Reports</button>
 
-
 </nav>
 
 
-<h2 class="page-title">
-Reports Dashboard
-</h2>
+<div class="container">
 
+    <!-- HEADER -->
+    <div class="page-header">
+        <h2>Reports Dashboard</h2>
+        <p>View system insights and sales data</p>
+    </div>
 
-<div class="actions">
+    <!-- ACTIONS -->
+    <div class="report-actions">
 
-<button class="btn-blue"
-onclick="loadReport()">
-Generate Report
-</button>
+        <button class="btn-blue" onclick="loadReport()">
+            Generate Report
+        </button>
 
-<button class="btn-red"
-onclick="loadLowStock()">
-Low Stock
-</button>
+        <button class="btn-red" onclick="loadLowStock()">
+            Low Stock
+        </button>
+
+        <button class="btn-cyan" onclick="loadCashierReport()">
+            Today's Sales
+        </button>
+
+    </div>
+
+    <!-- RESULT -->
+    <div class="report-card">
+
+        <h3>Result</h3>
+
+        <div id="report"></div>
+
+    </div>
+
+    <!-- BACK BUTTON -->
+    <div class="back-section">
+        <button class="btn-green" onclick="goProducts()">
+            ← Back to Products
+        </button>
+    </div>
 
 </div>
-
-
-
-<div class="card">
-
-<h3>Result</h3>
-
-<div id="report"></div>
-
-</div>
-
-
-<div style="margin:20px">
-
-<button class="btn-green"
-onclick="goProducts()">
-Back
-</button>
-
-</div>
-
 
 <script src="script.js"></script>
 

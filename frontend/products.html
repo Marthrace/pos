@@ -1,4 +1,4 @@
- <!DOCTYPE html>
+<!DOCTYPE html>
 <html>
 <head>
 
@@ -29,45 +29,48 @@ Reset Password
 
 <div class="container">
 
-<h2>Products</h2>
+    <!-- HEADER -->
+    <div class="page-header">
+        <h2>Products</h2>
+        <p>Manage your inventory</p>
+    </div>
 
+    <!-- ACTIONS -->
+    <div class="top-actions">
 
-<div class="top-actions">
+        <button class="btn-blue" onclick="loadProducts()">
+            Refresh
+        </button>
 
-<button class="btn-blue"
-onclick="loadProducts()">
-Refresh
-</button>
+        <button class="btn-green"
+        onclick="window.location='add-product.html'">
+            + Add Product
+        </button>
 
-<button class="btn-green"
-onclick="window.location='add-product.html'">
-Add Product
-</button>
+    </div>
+
+    <!-- TABLE -->
+    <div class="table-card">
+
+        <table>
+
+            <thead>
+                <tr>
+                    <th>ID</th>
+                    <th>Name</th>
+                    <th>Price</th>
+                    <th>Quantity</th>
+                </tr>
+            </thead>
+
+            <tbody id="productsTable"></tbody>
+
+        </table>
+
+    </div>
 
 </div>
 
-
-<div class="table-card">
-
-<table>
-
-<thead>
-<tr>
-<th>ID</th>
-<th>Name</th>
-<th>Price</th>
-<th>Quantity</th>
-</tr>
-</thead>
-
-<tbody id="productsTable"></tbody>
-
-</table>
-
-</div>
-
-
-</div>
 
 <!-- INPUT MODAL -->
 <div id="inputModal" class="modal">
@@ -98,7 +101,7 @@ Add Product
         <input id="passwordInput" type="password">
 
         <br><br>
-
+        
         <button onclick="passwordOk()">Confirm</button>
         <button onclick="passwordCancel()">Cancel</button>
 
@@ -112,23 +115,33 @@ Add Product
 
     <div class="modal-box">
 
-        <h3>Admin Reset Password</h3>
+        <span class="close" onclick="closeResetModal()">✖</span>
 
-        <input id="resetUsername" placeholder="Username">
+        <h2>Admin Reset Password</h2>
+        <p id="resetDesc">Reset a user's password</p>
 
-        <input id="resetPassword"
-               type="password"
-               placeholder="New Password">
+        <input id="resetUsername" placeholder="Enter username">
+       <input id="resetPassword" type="password" placeholder="Enter new password">
+       <input id="confirmPassword" type="password" placeholder="Confirm password">
 
-        <br><br>
+        <!-- MESSAGE AREA -->
+        <div id="resetMsg" class="modal-msg"></div>
 
-        <button onclick="resetPasswordAdmin()">
-            Reset
-        </button>
+        <!-- BUTTONS -->
+        <div class="modal-actions">
 
-        <button onclick="closeResetModal()">
-            Cancel
-        </button>
+            <button id="resetBtnAction"
+                    class="btn-green"
+                    onclick="resetPasswordAdmin()">
+                Reset Password
+            </button>
+
+            <button class="btn-red"
+                    onclick="closeResetModal()">
+                Cancel
+            </button>
+
+        </div>
 
     </div>
 

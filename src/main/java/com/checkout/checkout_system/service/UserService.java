@@ -27,6 +27,11 @@ public class UserService {
                            String password,
                            String roleName) {
 
+        // ✅ Check if username already exists
+    if (userRepository.findByUsername(username).isPresent()) {
+        throw new RuntimeException("Username '" + username + "' already exists");
+    }
+
         Role role = roleRepository.findByName(roleName)
                 .orElseThrow(() -> new RuntimeException("Role not found"));
 

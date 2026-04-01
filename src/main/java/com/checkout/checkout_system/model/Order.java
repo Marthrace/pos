@@ -6,6 +6,8 @@ import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
+import jakarta.persistence.JoinColumn;
+import jakarta.persistence.ManyToOne;
 import jakarta.persistence.Table;
 
 @Entity
@@ -20,13 +22,15 @@ public class Order {
 
     private double totalAmount;
 
-    // ✅ NEW — payment fields
+    // Payment fields
     private String paymentMethod;
-
     private double paidAmount;
-
     private double changeAmount;
 
+    // ✅ NEW: Track cashier who created the order
+    @ManyToOne
+    @JoinColumn(name = "cashier_id")
+    private User cashier;
 
     public Order() {
         this.orderDate = LocalDateTime.now();
@@ -37,6 +41,7 @@ public class Order {
         this.totalAmount = totalAmount;
     }
 
+    // Getters and setters
     public Long getId() {
         return id;
     }
@@ -52,8 +57,6 @@ public class Order {
     public void setTotalAmount(double totalAmount) {
         this.totalAmount = totalAmount;
     }
-
-    // ✅ getters setters for payment
 
     public String getPaymentMethod() {
         return paymentMethod;
@@ -77,5 +80,14 @@ public class Order {
 
     public void setChangeAmount(double changeAmount) {
         this.changeAmount = changeAmount;
+    }
+
+    // ✅ Getters and setters for cashier
+    public User getCashier() {
+        return cashier;
+    }
+
+    public void setCashier(User cashier) {
+        this.cashier = cashier;
     }
 }
