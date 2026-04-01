@@ -166,18 +166,54 @@ function addToCart(id) {
     openModal("Quantity", function(qty) {
 
         qty = parseInt(qty);
-
         if (!qty || qty <= 0) return;
 
-        cart.push({
-            productId: id,
-            quantity: qty
-        });
+        const product = products.find(p => p.id === id);
+        if (!product) return;
+
+        const existingItem = cart.find(i => i.productId === id);
+        let totalRequested = qty;
+        if (existingItem) totalRequested += existingItem.quantity;
+
+        const msg = document.getElementById("modalMsg");
+
+        // ❌ If stock exceeded → show message, do NOT close modal
+        if (totalRequested > product.quantity) {
+            msg.innerText = `❌ Stock less than ${totalRequested}`;
+            msg.className = "modal-msg error";
+
+            // Auto-clear after 3s, keep focus
+            setTimeout(() => {
+                msg.innerText = "";
+                msg.className = "modal-msg";
+                document.getElementById("modalInput").focus();
+            }, 3000);
+
+            return; // modal stays open
+        }
+
+        // ✅ Stock ok → add/update cart
+        if (existingItem) {
+            existingItem.quantity += qty;
+        } else {
+            cart.push({ productId: id, quantity: qty });
+        }
 
         renderCart();
 
+        // ✅ Close modal now that stock is fine
+        document.getElementById("inputModal").style.display = "none";
+
     });
 
+    // Clear modal input/message when opening
+    const input = document.getElementById("modalInput");
+    input.value = "";
+    input.focus();
+
+    const msg = document.getElementById("modalMsg");
+    msg.innerText = "";
+    msg.className = "modal-msg";
 }
 
 // new
@@ -187,26 +223,41 @@ function openModal(title, callback) {
 
     document.getElementById("modalTitle").innerText = title;
 
-    document.getElementById("modalInput").value = "";
+    const input = document.getElementById("modalInput");
+
+    input.value = "";
 
     modalCallback = callback;
 
     document.getElementById("inputModal").style.display = "block";
+
+    // ✅ ADD THIS
+    setTimeout(() => {
+        input.focus();
+        input.select();
+    }, 50);
 }
 
-function modalOk() {
+document.addEventListener("DOMContentLoaded", function () {
 
-    const val =
-        document.getElementById("modalInput").value;
+    const input = document.getElementById("modalInput");
 
-    document.getElementById("inputModal").style.display = "none";
-
-    if (modalCallback) {
-
-        modalCallback(val);
-
+    if (input) {
+        input.addEventListener("keydown", function (e) {
+            if (e.key === "Enter") {
+                modalOk();
+            }
+        });
     }
 
+});
+
+function modalOk() {
+    const val = document.getElementById("modalInput").value;
+
+    if (modalCallback) {
+        modalCallback(val); // let the caller decide what to do
+    }
 }
 
 function modalCancel() {
@@ -265,6 +316,7 @@ function checkout() {
     const auth = localStorage.getItem("auth");
 
     openModal("Cash paid", function(paid) {
+        
 
         if (!paid || isNaN(paid) || paid <= 0) return;
 
@@ -409,22 +461,7 @@ function logout() {
 
 }
 
-// Set logged in user in localStorage for role-based access control
-//localStorage.setItem("user", username);
-// Hide add product button for non-admin users
-/*window.onload = function () {
 
-    const user = localStorage.getItem("user");
-
-    if (user !== "admin") {
-
-        const btn = document.getElementById("addBtn");
-
-        if (btn) btn.style.display = "none";
-
-    }
-
-};*/
 
 function clearCart() {
 
